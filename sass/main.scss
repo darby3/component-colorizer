@@ -54,6 +54,11 @@
     margin-top: 1rem;
     font-weight: 700;
     font-size: 1.5rem;
+
+    &.rgba,
+    &.luminance {
+      font-size: 1rem;
+    }
   }
 }
 
@@ -80,7 +85,7 @@
   justify-content: center;
 
   button {
-    font-size: 2rem;
+    font-size: 1.5rem;
     padding: 1rem;
     border-radius: 8px;
   }
@@ -110,3 +115,26 @@
   }
 }
 
+#accessibility {
+  margin: 4rem;
+  padding: 0 1rem;
+  border: 1px dotted #323232;
+  border-radius: 16px;
+}
+
+#success-box {
+  font-weight: 700;
+  font-size: 1.25rem;
+
+  &.fail {
+    color: red;
+  }
+
+  &.large {
+    color: #88663F;
+  }
+
+  &.safe {
+    color: #065642;
+  }
+}

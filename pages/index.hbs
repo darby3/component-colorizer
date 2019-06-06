@@ -6,25 +6,40 @@ title: Component Colorizer
 
 <div id="wrapperBackground" class="pickers-wrapper black">
     <div class="pickers">
-        <div class="pickerHolder">
+        <div id="primaryPickerHolder" class="pickerHolder">
             <div id="primaryPickerElement" class="color-picker"></div>
             <span>Primary</span>
+            <span class="rgba"></span>
+            <span>Luminance</span>
+            <span class="luminance"></span>
         </div>
 
-        <div class="pickerHolder">
+        <div id="secondaryPickerHolder" class="pickerHolder">
             <div id="secondaryPickerElement" class="color-picker"></div>
             <span>Secondary</span>
+            <span class="rgba"></span>
+            <span>Luminance</span>
+            <span class="luminance"></span>
         </div>
 
-        <div class="pickerHolder">
+        <div id="tertiaryPickerHolder" class="pickerHolder">
             <div id="tertiaryPickerElement" class="color-picker"></div>
             <span>Tertiary</span>
+            <span class="rgba"></span>
+            <span>Luminance</span>
+            <span class="luminance"></span>
         </div>
     </div>
 </div>
 
 <div class="controllers">
     <button id="invertWrapper">Invert pickers background color</button>
+</div>
+
+<div id="accessibility">
+    <h2>Accessibility Information</h2>
+    <h3>Primary-Secondary Contrast Ratio: <span id="primary-secondary-contrast-ratio"></span></h3>
+    <p id="success-box"></p>
 </div>
 
 <div class="components">
