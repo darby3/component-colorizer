@@ -1,0 +1,40 @@
+---
+title: Component Colorizer
+---
+
+<h1>Component Colorizer!</h1>
+
+<div id="wrapperBackground" class="pickers-wrapper black">
+    <div class="pickers">
+        <div class="pickerHolder">
+            <div id="primaryPickerElement" class="color-picker"></div>
+            <span>Primary</span>
+        </div>
+
+        <div class="pickerHolder">
+            <div id="secondaryPickerElement" class="color-picker"></div>
+            <span>Secondary</span>
+        </div>
+
+        <div class="pickerHolder">
+            <div id="tertiaryPickerElement" class="color-picker"></div>
+            <span>Tertiary</span>
+        </div>
+    </div>
+</div>
+
+<div class="controllers">
+    <button id="invertWrapper">Invert pickers background color</button>
+</div>
+
+<div class="components">
+    <div data-colorsource="secondary" class="basic-copy">
+        <h1 data-colorsource="primary">A simple headline</h1>
+        <p data-colorsource="primary">Some general body copy.</p>
+        <p data-colorsource="primary">A piece of copy with <a href="google.com">a link to an external resource</a> contained within.</p>
+    </div>
+
+    <div class="buttons">
+        <button class="simple-button" data-colorsource="primary-on-secondary" id="basic-button">A basic button</button>
+    </div>
+</div>

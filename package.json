@@ -1,0 +1,68 @@
+{
+  "name": "npmscriptsstarter",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "nodemonConfig": {
+    "events": {
+      "crash": "osascript -e 'display notification \"Something Broke\" with title \"npmScriptsStarter\"'"
+    }
+  },
+  "watch": {
+    "sass": {
+      "patterns": [
+        "sass",
+        "scss"
+      ],
+      "extensions": "scss"
+    },
+    "img": {
+      "patterns": [
+        "images"
+      ],
+      "extensions": [
+        "jpg",
+        "png"
+      ]
+    },
+    "js": "js/**",
+    "build": {
+      "patterns": [
+        "pages",
+        "templates"
+      ],
+      "extensions": "hbs"
+    }
+  },
+  "scripts": {
+    "js": "browserify js/app.js -t babelify -o build/js/app.js",
+    "sass": "node-sass sass/main.scss build/css/styles.css",
+    "img": "cp -r images/ build/img/",
+    "clean": "rm -r build/",
+    "preview": "live-server --no-browser --open=build/ --watch=build/ --mount=/:build/ --ignore=**/*tmp-browserify*",
+    "mypreview": "node server.js",
+    "build": "assemble",
+    "watch": "npm-watch",
+    "predev": "mkdir -p build && run-p --silent sass js img build",
+    "dev": "run-p --silent mypreview watch"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.4.3",
+    "assemble": "^0.24.3",
+    "babel-core": "^6.26.3",
+    "babel-preset-env": "^1.7.0",
+    "babelify": "^10.0.0",
+    "browserify": "^16.2.3",
+    "chalk-animation": "^1.6.0",
+    "gulp-extname": "^0.2.2",
+    "live-server": "^1.2.1",
+    "node-sass": "^4.11.0",
+    "npm-run-all": "^4.1.5",
+    "npm-watch": "^0.6.0"
+  },
+  "dependencies": {
+    "@simonwep/pickr": "^0.6.4"
+  }
+}

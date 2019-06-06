@@ -1,0 +1,112 @@
+// Style
+@import '../node_modules/@simonwep/pickr/src/scss/pickr.scss';
+@import "global/global-variables";
+
+* {
+  font-family: 'Source Sans Pro', sans-serif;
+}
+
+
+.main {
+  margin: $margin;
+  padding: $padding;
+  background: $blue;
+  color: #ffffff;
+
+  a {
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 50px;
+  }
+}
+
+.pickers-wrapper {
+  margin: 20px auto;
+  padding: 20px 0;
+  transition: background-color 0.5s ease;
+
+  &.black {
+    background: #000;
+    border: 1px dotted #fff;
+
+    color: #fff;
+  }
+
+  &.white {
+    background: #fff;
+    border: 1px dotted #000;
+
+    color: #000;
+  }
+
+  span {
+    transition: color 0.5s ease;
+  }
+}
+
+.pickerHolder {
+  display: flex;
+  flex-flow: column wrap;
+  align-items: center;
+  justify-content: normal;
+
+  span {
+    margin-top: 1rem;
+    font-weight: 700;
+    font-size: 1.5rem;
+  }
+}
+
+.pickr .pcr-button {
+  width: 200px;
+  height: 200px;
+}
+
+.pickers {
+  width: 100%;
+  max-width: 640px;
+  margin: 20px auto;
+
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 20px 20px;
+}
+
+.controllers {
+  margin: 4rem 0;
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  justify-content: center;
+
+  button {
+    font-size: 2rem;
+    padding: 1rem;
+    border-radius: 8px;
+  }
+}
+
+
+.components {
+  margin-top: 4rem;
+  padding-top: 4rem;
+  border-top: 1px dotted #323232;
+
+  * {
+    transition: all 0.25s ease;
+  }
+
+  .basic-copy,
+  .buttons {
+    margin: 2rem;
+    padding: 2rem;
+  }
+
+  .simple-button {
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    font-size: 1rem;
+  }
+}
+
