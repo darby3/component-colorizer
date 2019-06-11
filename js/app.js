@@ -9,8 +9,6 @@ var hiThere = require("./modules/helloThere");
     hiThere();
 
     // Color Pickers
-    const pickers = document.querySelectorAll('.color-picker');
-    let activePickers = [];
 
     const componentsOptions = {
       // Main components
@@ -31,68 +29,107 @@ var hiThere = require("./modules/helloThere");
       }
     };
 
-    // primary color picker
-    const primaryPickerElement = document.getElementById('primaryPickerElement');
-    const primaryPicker = Pickr.create({
-      el: primaryPickerElement,
-      components: componentsOptions
-    });
-    activePickers.push(primaryPicker);
 
-    primaryPicker.on('save', (...args) => {
-      console.dir(args[0]);
+    // Object-oriented color picker containers
 
-      const primaryEls = document.querySelectorAll('[data-colorsource="primary"], [data-colorsource="primary-on-secondary"]');
-      primaryEls.forEach(function (el) {
-        el.style.color = args[0].toHEXA().toString();
-      })
+    var pickerContainer = {
+      init: function (el) {
+        this.el = el;
+        this.id = el.id;
+        this.rgba_output = el.querySelector('.rgba');
+        this.luminance_output = el.querySelector('.luminance');
 
-      let holder = document.getElementById("primaryPickerHolder");
-      holder.querySelector(".rgba").innerHTML = args[0].toRGBA();
+        // Create a color picker
+        let pickerEl = el.querySelector('.color-picker');
 
-      let RGBAthing = args[0].toRGBA();
-      let luminance = get_luminance(RGBAthing);
+        this.picker = Pickr.create({
+          el: pickerEl,
+          components: componentsOptions
+        }).on('init', (...args) => {
+          this.updateOutputs(args[0]['_color'].toRGBA());
+        }).on('save', (...args) => {
+          this.updateOutputs(args[0].toRGBA());
+        });
 
-      holder.querySelector(".luminance").innerHTML = luminance;
+        return this;
+      },
 
-      check();
-    });
+      updateOutputs: function(color) {
+        this.rgba_output.innerHTML = color;
+        this.luminance_output.innerHTML = color;
+      },
+    };
 
-    // secondary color picker
-    const secondaryPickerElement = document.getElementById('secondaryPickerElement');
-    const secondaryPicker = Pickr.create({
-      el: secondaryPickerElement,
-      components: componentsOptions
-    });
-    activePickers.push(secondaryPicker);
+    let pickerHolders = [];
 
-    secondaryPicker.on('save', (...args) => {
-      console.dir(args[1]);
-
-      const secondaryEls = document.querySelectorAll('[data-colorsource="secondary"], [data-colorsource="primary-on-secondary"]');
-      secondaryEls.forEach(function (el) {
-        el.style.backgroundColor = args[0].toHEXA().toString();
-      })
-
-      let holder = document.getElementById("secondaryPickerHolder");
-      holder.querySelector(".rgba").innerHTML = args[0].toRGBA();
-
-      let RGBAthing = args[0].toRGBA();
-      let luminance = get_luminance(RGBAthing);
-
-      holder.querySelector(".luminance").innerHTML = luminance;
-
-      check();
+    document.querySelectorAll('.pickerHolder').forEach(function (el) {
+      pickerHolders.push(Object.create(pickerContainer).init(el));
     });
 
 
-    // tertiary color picker
-    const tertiaryPickerElement = document.getElementById('tertiaryPickerElement');
-    const tertiaryPicker = Pickr.create({
-      el: tertiaryPickerElement,
-      components: componentsOptions
-    });
-    activePickers.push(tertiaryPicker);
+
+    // // primary color picker
+    // const primaryPickerElement = document.getElementById('primaryPickerElement');
+    // const primaryPicker = Pickr.create({
+    //   el: primaryPickerElement,
+    //   components: componentsOptions
+    // });
+    // activePickers.push(primaryPicker);
+    //
+    // primaryPicker.on('save', (...args) => {
+    //   console.dir(args[0]);
+    //
+    //   const primaryEls = document.querySelectorAll('[data-colorsource="primary"], [data-colorsource="primary-on-secondary"]');
+    //   primaryEls.forEach(function (el) {
+    //     el.style.color = args[0].toHEXA().toString();
+    //   })
+    //
+    //   let holder = document.getElementById("primaryPickerHolder");
+    //   holder.querySelector(".rgba").innerHTML = args[0].toRGBA();
+    //
+    //   let RGBAthing = args[0].toRGBA();
+    //   let luminance = get_luminance(RGBAthing);
+    //
+    //   holder.querySelector(".luminance").innerHTML = luminance;
+    //
+    //   check();
+    // });
+    //
+    // // secondary color picker
+    // const secondaryPickerElement = document.getElementById('secondaryPickerElement');
+    // const secondaryPicker = Pickr.create({
+    //   el: secondaryPickerElement,
+    //   components: componentsOptions
+    // });
+    // activePickers.push(secondaryPicker);
+    //
+    // secondaryPicker.on('save', (...args) => {
+    //   console.dir(args[1]);
+    //
+    //   const secondaryEls = document.querySelectorAll('[data-colorsource="secondary"], [data-colorsource="primary-on-secondary"]');
+    //   secondaryEls.forEach(function (el) {
+    //     el.style.backgroundColor = args[0].toHEXA().toString();
+    //   })
+    //
+    //   let holder = document.getElementById("secondaryPickerHolder");
+    //   holder.querySelector(".rgba").innerHTML = args[0].toRGBA();
+    //
+    //   let RGBAthing = args[0].toRGBA();
+    //   let luminance = get_luminance(RGBAthing);
+    //
+    //   holder.querySelector(".luminance").innerHTML = luminance;
+    //
+    //   check();
+    // });
+    //
+    //
+    // // tertiary color picker
+    // const tertiaryPickerElement = document.getElementById('tertiaryPickerElement');
+    // const tertiaryPicker = Pickr.create({
+    //   el: tertiaryPickerElement,
+    //   components: componentsOptions
+    // });
+    // activePickers.push(tertiaryPicker);
 
 
     // Controllers
