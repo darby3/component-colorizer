@@ -117,24 +117,39 @@
 
 #accessibility {
   margin: 4rem;
-  padding: 0 1rem;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: normal;
+}
+
+#accessibilityOutputs {
+  width: 100%;
+  margin: 2rem auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-column-gap: 2rem;
+}
+
+.result {
   border: 1px dotted #323232;
+  padding: 0 1rem;
   border-radius: 16px;
 }
 
-#success-box {
+.result__message {
   font-weight: 700;
   font-size: 1.25rem;
 
-  &.fail {
+  &[data-resultlevel="fail"] {
     color: red;
   }
 
-  &.large {
+  &[data-resultlevel="caution"] {
     color: #88663F;
   }
 
-  &.safe {
+  &[data-resultlevel="success"] {
     color: #065642;
   }
 }

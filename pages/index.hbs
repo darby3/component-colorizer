@@ -6,7 +6,7 @@ title: Component Colorizer
 
 <div id="wrapperBackground" class="pickers-wrapper black">
     <div class="pickers">
-        <div id="primaryPickerHolder" class="pickerHolder">
+        <div data-name="Primary" id="primaryPickerHolder" class="pickerHolder">
             <div id="primaryPickerElement" class="color-picker"></div>
             <span>Primary</span>
             <span class="rgba"></span>
@@ -14,7 +14,7 @@ title: Component Colorizer
             <span class="luminance"></span>
         </div>
 
-        <div id="secondaryPickerHolder" class="pickerHolder">
+        <div data-name="Secondary" id="secondaryPickerHolder" class="pickerHolder">
             <div id="secondaryPickerElement" class="color-picker"></div>
             <span>Secondary</span>
             <span class="rgba"></span>
@@ -22,7 +22,7 @@ title: Component Colorizer
             <span class="luminance"></span>
         </div>
 
-        <div id="tertiaryPickerHolder" class="pickerHolder">
+        <div data-name="Tert" id="tertiaryPickerHolder" class="pickerHolder">
             <div id="tertiaryPickerElement" class="color-picker"></div>
             <span>Tertiary</span>
             <span class="rgba"></span>
@@ -38,8 +38,8 @@ title: Component Colorizer
 
 <div id="accessibility">
     <h2>Accessibility Information</h2>
-    <h3>Primary-Secondary Contrast Ratio: <span id="primary-secondary-contrast-ratio"></span></h3>
-    <p id="success-box"></p>
+
+    <div id="accessibilityOutputs"></div>
 </div>
 
 <div class="components">
@@ -52,4 +52,14 @@ title: Component Colorizer
     <div class="buttons">
         <button class="simple-button" data-colorsource="primary-on-secondary" id="basic-button">A basic button</button>
     </div>
+</div>
+
+<div class="templates">
+    <template id="result_box">
+        <div class="result">
+            <h3 class="result__title">Comparison: <span class="result__title__primary"></span> to <span class="result__title__secondary"></span></h3>
+            <p data-resultlevel="" class="result__message"></p>
+            <p class="result__ratio">Contrast ratio: <span class="result__ratio__value"></span></p>
+        </div>
+    </template>
 </div>

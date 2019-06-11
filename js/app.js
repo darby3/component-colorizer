@@ -49,6 +49,8 @@ var hiThere = require("./modules/helloThere");
           this.updateOutputs(args[0]['_color'].toRGBA());
         }).on('save', (...args) => {
           this.updateOutputs(args[0].toRGBA());
+
+          newComboObj.runComparisons(true);
         });
 
         return this;
@@ -56,7 +58,7 @@ var hiThere = require("./modules/helloThere");
 
       updateOutputs: function(color) {
         this.rgba_output.innerHTML = color;
-        this.luminance_output.innerHTML = color;
+        this.luminance_output.innerHTML = get_luminance(color);
       },
     };
 
@@ -67,70 +69,121 @@ var hiThere = require("./modules/helloThere");
     });
 
 
+    // Get all our possible picker combos, for accessibility comparison purposes
 
-    // // primary color picker
-    // const primaryPickerElement = document.getElementById('primaryPickerElement');
-    // const primaryPicker = Pickr.create({
-    //   el: primaryPickerElement,
-    //   components: componentsOptions
-    // });
-    // activePickers.push(primaryPicker);
-    //
-    // primaryPicker.on('save', (...args) => {
-    //   console.dir(args[0]);
-    //
-    //   const primaryEls = document.querySelectorAll('[data-colorsource="primary"], [data-colorsource="primary-on-secondary"]');
-    //   primaryEls.forEach(function (el) {
-    //     el.style.color = args[0].toHEXA().toString();
-    //   })
-    //
-    //   let holder = document.getElementById("primaryPickerHolder");
-    //   holder.querySelector(".rgba").innerHTML = args[0].toRGBA();
-    //
-    //   let RGBAthing = args[0].toRGBA();
-    //   let luminance = get_luminance(RGBAthing);
-    //
-    //   holder.querySelector(".luminance").innerHTML = luminance;
-    //
-    //   check();
-    // });
-    //
-    // // secondary color picker
-    // const secondaryPickerElement = document.getElementById('secondaryPickerElement');
-    // const secondaryPicker = Pickr.create({
-    //   el: secondaryPickerElement,
-    //   components: componentsOptions
-    // });
-    // activePickers.push(secondaryPicker);
-    //
-    // secondaryPicker.on('save', (...args) => {
-    //   console.dir(args[1]);
-    //
-    //   const secondaryEls = document.querySelectorAll('[data-colorsource="secondary"], [data-colorsource="primary-on-secondary"]');
-    //   secondaryEls.forEach(function (el) {
-    //     el.style.backgroundColor = args[0].toHEXA().toString();
-    //   })
-    //
-    //   let holder = document.getElementById("secondaryPickerHolder");
-    //   holder.querySelector(".rgba").innerHTML = args[0].toRGBA();
-    //
-    //   let RGBAthing = args[0].toRGBA();
-    //   let luminance = get_luminance(RGBAthing);
-    //
-    //   holder.querySelector(".luminance").innerHTML = luminance;
-    //
-    //   check();
-    // });
-    //
-    //
-    // // tertiary color picker
-    // const tertiaryPickerElement = document.getElementById('tertiaryPickerElement');
-    // const tertiaryPicker = Pickr.create({
-    //   el: tertiaryPickerElement,
-    //   components: componentsOptions
-    // });
-    // activePickers.push(tertiaryPicker);
+    const getPickerCombos = function() {
+      let pickers = pickerHolders;
+      let outputItems = [];
 
+      for (let i = 0; i < pickers.length - 1; i++) {
+        let x = pickers[i];
+
+        for (let j = i + 1; j < pickers.length; j++) {
+          let y = pickers[j];
+          let output = [ x, y ];
+
+          outputItems.push(output);
+        }
+      }
+
+      return outputItems;
+    };
+
+    // Picker Container Combo Object
+
+    let pickerCombos = {
+      init: function() {
+        console.log("initializing pickerCombos object");
+        this.combos = getPickerCombos();
+
+        return this;
+      },
+
+      comparisons: [],
+
+      // Run comparisons
+      runComparisons: function(verbose) {
+        console.log('comparisons:');
+
+        this.comparisons = [];
+
+        for (let i = 0; i < this.combos.length; i++) {
+          let x = this.combos[i][0].picker.getColor().toRGBA();
+          let y = this.combos[i][1].picker.getColor().toRGBA();
+
+          let ratio = get_contrast(x, y);
+
+          this.comparisons.push({
+            x: this.combos[i][0].el.dataset.name,
+            y: this.combos[i][1].el.dataset.name,
+            contrast: ratio
+          });
+
+          if (verbose) {
+            this.comparisons.forEach(function(el) {
+              console.log(el.x, ' : ', el.y, ' --> ', el.contrast);
+            })
+          };
+        };
+
+        this.updateOutputs();
+
+        return this;
+      },
+
+      // Update output box
+      updateOutputs: function() {
+        let outputBox = document.querySelector('#accessibilityOutputs');
+
+        while (outputBox.lastChild) {
+          outputBox.removeChild(outputBox.lastChild);
+        }
+
+        let template = document.querySelector('#result_box');
+
+        for (let q = 0; q < this.comparisons.length; q++) {
+          let resultBox = document.importNode(template.content, true);
+
+          resultBox.querySelector('.result__title__primary').innerHTML = this.comparisons[q].x;
+          resultBox.querySelector('.result__title__secondary').innerHTML = this.comparisons[q].y;
+          resultBox.querySelector('.result__ratio__value').innerHTML = this.comparisons[q].contrast;
+
+          let resultOutput = this.resultMessage(this.comparisons[q].contrast);
+
+          let resultMessageEl = resultBox.querySelector('.result__message');
+          resultMessageEl.innerHTML = resultOutput.message;
+          resultMessageEl.dataset.resultlevel = resultOutput.result;
+
+          outputBox.appendChild(resultBox);
+        }
+      },
+
+      resultMessage: function(ratio) {
+        const failMessage = "This fails WCAG 2.0. Never do this.";
+        const largeMessage = "This passes WCAG 2.0 for large text. Use with caution.";
+        const safeMessage = "This totally passes WCAG 2.0. Go nuts!";
+
+        if (ratio < 3) {
+          return {
+            result: 'fail',
+            message: failMessage
+          }
+        } else if (ratio >= 3 && ratio < 4.5) {
+          return {
+            result: 'caution',
+            message: largeMessage
+          }
+        } else if (ratio >= 4.5) {
+          return {
+            result: 'success',
+            message: safeMessage
+          }
+        }
+
+      }
+    };
+
+    let newComboObj = Object.create(pickerCombos).init().runComparisons(true);
 
     // Controllers
     const inverter = document.getElementById('invertWrapper');
@@ -139,40 +192,6 @@ var hiThere = require("./modules/helloThere");
       wrapper.classList.toggle('black');
       wrapper.classList.toggle('white');
     };
-
-
-    // Contrast ratio checking
-    function check() {
-      let primaryColor = primaryPicker.getColor().toRGBA();
-      let secondaryColor = secondaryPicker.getColor().toRGBA();
-
-      let ratio = get_contrast(primaryColor, secondaryColor);
-
-      console.log(ratio);
-
-      let outputBox = document.getElementById('primary-secondary-contrast-ratio');
-      outputBox.innerText = ratio;
-
-      const failMessage = "This totally fails WCAG 2.0. Don't do it."
-      const largeMessage = "This passes WCAG 2.0 for large text. Use with caution."
-      const safeMessage = "This totally passes WCAG 2.0. Go nuts!"
-
-      const outputBoxMessage = document.getElementById('success-box');
-
-      if (ratio < 3) {
-        outputBoxMessage.innerText = failMessage;
-        outputBoxMessage.classList.remove('large', 'safe');
-        outputBoxMessage.classList.add('fail');
-      } else if (ratio >= 3 && ratio < 4.5) {
-        outputBoxMessage.innerText = largeMessage;
-        outputBoxMessage.classList.remove('fail', 'safe');
-        outputBoxMessage.classList.add('large');
-      } else if (ratio >= 4.5) {
-        outputBoxMessage.innerText = safeMessage;
-        outputBoxMessage.classList.remove('fail', 'large');
-        outputBoxMessage.classList.add('safe');
-      }
-    }
 
   });
 }());
