@@ -6,25 +6,25 @@ title: Component Colorizer
 
 <div id="wrapperBackground" class="pickers-wrapper black">
     <div class="pickers">
-        <div data-name="Primary" id="primaryPickerHolder" class="pickerHolder">
-            <div id="primaryPickerElement" class="color-picker"></div>
-            <span>Primary</span>
+        <div data-name="Primary" class="pickerHolder">
+            <div class="color-picker"></div>
+            <span data-labeller>Primary</span>
             <span class="rgba"></span>
             <span>Luminance</span>
             <span class="luminance"></span>
         </div>
 
-        <div data-name="Secondary" id="secondaryPickerHolder" class="pickerHolder">
-            <div id="secondaryPickerElement" class="color-picker"></div>
-            <span>Secondary</span>
+        <div data-name="Secondary" class="pickerHolder">
+            <div class="color-picker"></div>
+            <span data-labeller>Secondary</span>
             <span class="rgba"></span>
             <span>Luminance</span>
             <span class="luminance"></span>
         </div>
 
-        <div data-name="Tert" id="tertiaryPickerHolder" class="pickerHolder">
-            <div id="tertiaryPickerElement" class="color-picker"></div>
-            <span>Tertiary</span>
+        <div data-name="Tertiary" class="pickerHolder">
+            <div class="color-picker"></div>
+            <span data-labeller>Tertiary</span>
             <span class="rgba"></span>
             <span>Luminance</span>
             <span class="luminance"></span>
@@ -60,6 +60,16 @@ title: Component Colorizer
             <h3 class="result__title">Comparison: <span class="result__title__primary"></span> to <span class="result__title__secondary"></span></h3>
             <p data-resultlevel="" class="result__message"></p>
             <p class="result__ratio">Contrast ratio: <span class="result__ratio__value"></span></p>
+        </div>
+    </template>
+
+    <template>
+        <div data-name="" id="primaryPickerHolder" class="pickerHolder">
+            <div id="primaryPickerElement" class="color-picker"></div>
+            <span>Primary</span>
+            <span class="rgba"></span>
+            <span>Luminance</span>
+            <span class="luminance"></span>
         </div>
     </template>
 </div>

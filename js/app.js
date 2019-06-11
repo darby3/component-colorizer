@@ -34,10 +34,15 @@ var hiThere = require("./modules/helloThere");
 
     var pickerContainer = {
       init: function (el) {
+        let self = this;
+
         this.el = el;
         this.id = el.id;
         this.rgba_output = el.querySelector('.rgba');
         this.luminance_output = el.querySelector('.luminance');
+
+        this.labelHolder = el.querySelector('[data-labeller]');
+        this.labelHolder.tabIndex = 0;
 
         // Create a color picker
         let pickerEl = el.querySelector('.color-picker');
@@ -53,14 +58,65 @@ var hiThere = require("./modules/helloThere");
           newComboObj.runComparisons(true);
         });
 
+        this.labelHolder.addEventListener('click', function(e) {
+          self.addLabeller();
+        });
+
+        this.labelHolder.addEventListener('keyup', function(e) {
+          if (e.keyCode === 13) {
+            self.addLabeller();
+          }
+        });
+
         return this;
       },
 
+      // Activating the labeller field
+      addLabeller: function() {
+        let self = this;
+        let catcher = document.createElement('input');
+
+        catcher.value = this.labelHolder.dataset.labeller || this.labelHolder.innerHTML;
+
+        this.el.insertBefore(catcher, this.labelHolder);
+        catcher.focus();
+        this.labelHolder.classList.toggle('hidden');
+
+        catcher.addEventListener('blur', function() {
+          self.removeLabeller();
+        });
+
+        catcher.addEventListener('keyup', function(e) {
+          if (e.keyCode === 9 || e.keyCode === 13 || e.keyCode === 27) {
+            self.removeLabeller();
+          }
+        });
+
+        this.catcher = catcher;
+      },
+
+      // Deactivating the labeller field
+      removeLabeller: function() {
+        let newValue = this.catcher.value;
+
+        this.labelHolder.dataset.labeller = this.labelHolder.innerHTML = newValue;
+
+        this.el.removeChild(this.catcher);
+        delete this.catcher;
+
+        this.labelHolder.classList.toggle('hidden');
+      },
+
+      // Updating the container output values
       updateOutputs: function(color) {
         this.rgba_output.innerHTML = color;
         this.luminance_output.innerHTML = get_luminance(color);
       },
     };
+
+
+
+    // Am array of picker holders
 
     let pickerHolders = [];
 
