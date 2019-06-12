@@ -237,6 +237,20 @@ var hiThere = require("./modules/helloThere");
           resultMessageEl.innerHTML = resultOutput.message;
           resultMessageEl.dataset.resultlevel = resultOutput.result;
 
+          // Inverter button
+
+          let inverter = resultBox.querySelector('[data-inverter]');
+          inverter.addEventListener('click', function() {
+            console.log(this);
+            let sampleBox = this.closest('.results_box').querySelector('.sample');
+
+            let colorOne = sampleBox.style.color;
+            let colorTwo = sampleBox.style.backgroundColor;
+
+            sampleBox.style.color = colorTwo;
+            sampleBox.style.backgroundColor = colorOne;
+          });
+
           outputBox.appendChild(resultBox);
         }
       },
