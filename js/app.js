@@ -8,6 +8,23 @@ var hiThere = require("./modules/helloThere");
   document.addEventListener('DOMContentLoaded', function () {
     hiThere();
 
+    // Starship Names
+
+    let starships = {
+      names: [
+        'Enterprise',
+        'Voyager',
+        'Discovery',
+        'Reliant',
+        'Vengeance',
+        'Defiant',
+      ],
+
+      fly: function() {
+        return this.names[Math.floor(Math.random() * Math.floor(this.names.length))]
+      }
+    };
+
     // Color Pickers
 
     const componentsOptions = {
@@ -38,11 +55,20 @@ var hiThere = require("./modules/helloThere");
 
         this.el = el;
         this.id = el.id;
+
+        console.log(el);
+
         this.rgba_output = el.querySelector('.rgba');
         this.luminance_output = el.querySelector('.luminance');
 
+        console.log(this);
+
         this.labelHolder = el.querySelector('[data-labeller]');
         this.labelHolder.tabIndex = 0;
+
+        if (this.labelHolder.dataset.labeller == "") {
+          this.labelHolder.dataset.labeller = this.labelHolder.innerHTML = el.dataset.name;
+        }
 
         // Create a color picker
         let pickerEl = el.querySelector('.color-picker');
@@ -290,6 +316,23 @@ var hiThere = require("./modules/helloThere");
       wrapper.classList.toggle('black');
       wrapper.classList.toggle('white');
     };
+
+    const addNew = document.querySelector("#addPicker");
+    addNew.addEventListener("click", function() {
+      console.log("clicked add new");
+
+      let template = document.querySelector('#picker_starter');
+      let holder = document.querySelector('.pickers');
+      let newPicker = document.importNode(template.content, true);
+
+      holder.appendChild(newPicker);
+      let newPickerEl = holder.lastElementChild;
+      newPickerEl.dataset.name = starships.fly();
+      pickerHolders.push(Object.create(pickerContainer).init(newPickerEl));
+
+      newComboObj = Object.create(pickerCombos).init().runComparisons(true);
+
+    });
 
   });
 }());

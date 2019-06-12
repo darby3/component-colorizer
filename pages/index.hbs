@@ -34,6 +34,7 @@ title: Component Colorizer
 
 <div class="controllers">
     <button id="invertWrapper">Invert pickers background color</button>
+    <button id="addPicker">Add a new picker</button>
 </div>
 
 <div id="accessibility">
@@ -72,10 +73,10 @@ title: Component Colorizer
         </div>
     </template>
 
-    <template>
-        <div data-name="" id="primaryPickerHolder" class="pickerHolder">
-            <div id="primaryPickerElement" class="color-picker"></div>
-            <span>Primary</span>
+    <template id="picker_starter">
+        <div data-name="" class="pickerHolder">
+            <div class="color-picker"></div>
+            <span data-labeller>Primary</span>
             <span class="rgba"></span>
             <span>Luminance</span>
             <span class="luminance"></span>

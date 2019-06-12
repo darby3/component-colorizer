@@ -68,21 +68,23 @@
 }
 
 .pickers {
-  width: 100%;
-  max-width: 640px;
+  width: calc(100% - 4rem);
+  //max-width: 1024px;
   margin: 20px auto;
 
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-gap: 20px 20px;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-gap: 40px 40px;
 }
 
 .controllers {
-  margin: 4rem 0;
+  margin: 4rem auto;
+  width: calc(100% - 2rem);
+  max-width: 660px;
   display: flex;
   flex-flow: row wrap;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
 
   button {
     font-size: 1.5rem;
@@ -128,7 +130,7 @@
   margin: 2rem auto;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  grid-column-gap: 2rem;
+  grid-gap: 2rem;
 }
 
 .results_box {
