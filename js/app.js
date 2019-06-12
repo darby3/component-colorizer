@@ -56,15 +56,13 @@ var hiThere = require("./modules/helloThere");
         this.el = el;
         this.id = el.id;
 
-        console.log(el);
-
         this.rgba_output = el.querySelector('.rgba');
         this.luminance_output = el.querySelector('.luminance');
 
-        console.log(this);
-
         this.labelHolder = el.querySelector('[data-labeller]');
         this.labelHolder.tabIndex = 0;
+
+        console.log(this.labelHolder);
 
         if (this.labelHolder.dataset.labeller == "") {
           this.labelHolder.dataset.labeller = this.labelHolder.innerHTML = el.dataset.name;
@@ -106,6 +104,7 @@ var hiThere = require("./modules/helloThere");
 
         catcher.value = this.labelHolder.dataset.labeller || this.labelHolder.innerHTML;
 
+        console.log(this.labelHolder);
         this.el.insertBefore(catcher, this.labelHolder);
         catcher.focus();
         this.labelHolder.classList.toggle('hidden');

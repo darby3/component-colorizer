@@ -68,19 +68,36 @@ body {
 .pickerHolder {
   display: flex;
   flex-flow: column wrap;
+  align-items: flex-start;
+  justify-content: normal;
+}
+
+.pickerHolder__stat {
+  width: 100%;
+  display: flex;
+  flex-flow: column nowrap;
   align-items: center;
   justify-content: normal;
 
-  span {
-    margin-top: 1rem;
-    font-weight: 700;
-    font-size: 1.5rem;
+  margin-top: 1rem;
 
-    &.rgba,
-    &.luminance {
-      font-size: 1rem;
-    }
+}
+
+.pickerHolder__name {
+  align-self: center;
+  width: auto;
+  margin: 0 0 1rem 0;
+  font-size: 1.5rem;
+  font-weight: bold;
+
+  span {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
   }
+}
+
+.pickr {
+  align-self: center;
 }
 
 .pickr .pcr-button {

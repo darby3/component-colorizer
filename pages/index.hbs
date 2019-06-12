@@ -11,27 +11,45 @@ title: Component Colorizer
 <div id="wrapperBackground" class="pickers-wrapper black">
     <div class="pickers">
         <div data-name="Primary" class="pickerHolder">
+            <div class="pickerHolder__stat pickerHolder__name" data-labeller>Primary</div>
+
             <div class="color-picker"></div>
-            <span data-labeller>Primary</span>
-            <span class="rgba"></span>
-            <span>Luminance</span>
-            <span class="luminance"></span>
+            <div class="pickerHolder__stat">
+                <span>Color</span>
+                <span class="rgba"></span>
+            </div>
+            <div class="pickerHolder__stat pickerHolder__luminance">
+                <span>Luminance</span>
+                <span class="luminance"></span>
+            </div>
         </div>
 
         <div data-name="Secondary" class="pickerHolder">
+            <div class="pickerHolder__stat pickerHolder__name" data-labeller>Secondary</div>
+
             <div class="color-picker"></div>
-            <span data-labeller>Secondary</span>
-            <span class="rgba"></span>
-            <span>Luminance</span>
-            <span class="luminance"></span>
+            <div class="pickerHolder__stat">
+                <span>Color:</span>
+                <span class="rgba"></span>
+            </div>
+            <div class="pickerHolder__stat pickerHolder__luminance">
+                <span>Luminance</span>
+                <span class="luminance"></span>
+            </div>
         </div>
 
         <div data-name="Tertiary" class="pickerHolder">
+            <div class="pickerHolder__stat pickerHolder__name" data-labeller>Tertiary</div>
+
             <div class="color-picker"></div>
-            <span data-labeller>Tertiary</span>
-            <span class="rgba"></span>
-            <span>Luminance</span>
-            <span class="luminance"></span>
+            <div class="pickerHolder__stat">
+                <span>Color:</span>
+                <span class="rgba"></span>
+            </div>
+            <div class="pickerHolder__stat pickerHolder__luminance">
+                <span>Luminance</span>
+                <span class="luminance"></span>
+            </div>
         </div>
     </div>
 </div>
@@ -88,11 +106,17 @@ title: Component Colorizer
 
     <template id="picker_starter">
         <div data-name="" class="pickerHolder">
+            <div class="pickerHolder__stat pickerHolder__name" data-labeller>Unknown</div>
+
             <div class="color-picker"></div>
-            <span data-labeller>Primary</span>
-            <span class="rgba"></span>
-            <span>Luminance</span>
-            <span class="luminance"></span>
+            <div class="pickerHolder__stat">
+                <span>Color:</span>
+                <span class="rgba"></span>
+            </div>
+            <div class="pickerHolder__stat pickerHolder__luminance">
+                <span>Luminance</span>
+                <span class="luminance"></span>
+            </div>
         </div>
     </template>
 </div>
