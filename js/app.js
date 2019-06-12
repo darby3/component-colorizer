@@ -147,6 +147,18 @@ var hiThere = require("./modules/helloThere");
 
     // Picker Container Combo Object
 
+    let comparison = {
+      init: function(x, y, xCol, yCol, ratio) {
+        this.x = x;
+        this.y = y;
+        this.xCol = xCol;
+        this.yCol = yCol;
+        this.ratio = ratio;
+
+        return this;
+      }
+    }
+
     let pickerCombos = {
       init: function() {
         console.log("initializing pickerCombos object");
@@ -166,14 +178,17 @@ var hiThere = require("./modules/helloThere");
         for (let i = 0; i < this.combos.length; i++) {
           let x = this.combos[i][0].picker.getColor().toRGBA();
           let y = this.combos[i][1].picker.getColor().toRGBA();
-
+          let xName = this.combos[i][0].el.dataset.name;
+          let yName = this.combos[i][1].el.dataset.name;
           let ratio = get_contrast(x, y);
 
-          this.comparisons.push({
-            x: this.combos[i][0].el.dataset.name,
-            y: this.combos[i][1].el.dataset.name,
-            contrast: ratio
-          });
+          this.comparisons.push(Object.create(comparison).init(
+            xName,
+            yName,
+            x,
+            y,
+            ratio
+          ));
 
           if (verbose) {
             this.comparisons.forEach(function(el) {
@@ -202,30 +217,21 @@ var hiThere = require("./modules/helloThere");
 
           resultBox.querySelector('.result__title__primary').innerHTML = this.comparisons[q].x;
           resultBox.querySelector('.result__title__secondary').innerHTML = this.comparisons[q].y;
-          resultBox.querySelector('.result__ratio__value').innerHTML = this.comparisons[q].contrast;
+          resultBox.querySelector('.result__ratio__value').innerHTML = this.comparisons[q].ratio;
 
-          let resultOutput = this.resultMessage(this.comparisons[q].contrast);
+          let resultOutput = this.resultMessage(this.comparisons[q].ratio);
 
           // Sample box
 
-          let firstColor, secondColor;
+          let firstColor = this.comparisons[q].xCol;
+          let secondColor = this.comparisons[q].yCol;
 
-          for (let i = 0; i < pickerHolders.length; i++) {
-            if (pickerHolders[i].el.dataset.name === this.comparisons[q].x) {
-              firstColor = pickerHolders[i].picker.getColor().toRGBA();
-              break;
-            }
-          }
+          let sampleBox = resultBox.querySelector('.sample');
 
-          for (let i = 0; i < pickerHolders.length; i++) {
-            if (pickerHolders[i].el.dataset.name === this.comparisons[q].y) {
-              secondColor = pickerHolders[i].picker.getColor().toRGBA();
-              break;
-            }
-          }
+          sampleBox.style.color = firstColor;
+          sampleBox.style.backgroundColor = secondColor;
 
-          resultBox.querySelector('.sample').style.cssText = "background-color: " + firstColor + "; color: " + secondColor;
-
+          console.log("current color: ", sampleBox.style.color);
 
           let resultMessageEl = resultBox.querySelector('.result__message');
           resultMessageEl.innerHTML = resultOutput.message;
@@ -235,6 +241,7 @@ var hiThere = require("./modules/helloThere");
         }
       },
 
+      // Generate a result message based on the current ratio.
       resultMessage: function(ratio) {
         const failMessage = "This fails WCAG 2.0. Never do this.";
         const largeMessage = "This passes WCAG 2.0 for large text. Use with caution.";
