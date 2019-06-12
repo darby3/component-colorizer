@@ -99,7 +99,7 @@ var hiThere = require("./modules/helloThere");
       removeLabeller: function() {
         let newValue = this.catcher.value;
 
-        this.labelHolder.dataset.labeller = this.labelHolder.innerHTML = newValue;
+        this.labelHolder.dataset.labeller = this.labelHolder.innerHTML = this.el.dataset.name = newValue;
 
         this.el.removeChild(this.catcher);
         delete this.catcher;
