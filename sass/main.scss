@@ -131,10 +131,24 @@
   grid-column-gap: 2rem;
 }
 
-.result {
+.results_box {
   border: 1px dotted #323232;
-  padding: 0 1rem;
   border-radius: 16px;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.result {
+  max-width: calc(100% - 2rem);
+  margin: 0 1rem;
+  //padding: 0 1rem;
+}
+
+.sample {
+  padding: 1rem;
+  border-radius: 0 0 16px 16px;
 }
 
 .result__message {

@@ -206,6 +206,27 @@ var hiThere = require("./modules/helloThere");
 
           let resultOutput = this.resultMessage(this.comparisons[q].contrast);
 
+          // Sample box
+
+          let firstColor, secondColor;
+
+          for (let i = 0; i < pickerHolders.length; i++) {
+            if (pickerHolders[i].el.dataset.name === this.comparisons[q].x) {
+              firstColor = pickerHolders[i].picker.getColor().toRGBA();
+              break;
+            }
+          }
+
+          for (let i = 0; i < pickerHolders.length; i++) {
+            if (pickerHolders[i].el.dataset.name === this.comparisons[q].y) {
+              secondColor = pickerHolders[i].picker.getColor().toRGBA();
+              break;
+            }
+          }
+
+          resultBox.querySelector('.sample').style.cssText = "background-color: " + firstColor + "; color: " + secondColor;
+
+
           let resultMessageEl = resultBox.querySelector('.result__message');
           resultMessageEl.innerHTML = resultOutput.message;
           resultMessageEl.dataset.resultlevel = resultOutput.result;
