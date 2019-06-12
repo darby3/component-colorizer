@@ -78,6 +78,8 @@ var hiThere = require("./modules/helloThere");
           components: componentsOptions
         }).on('init', (...args) => {
           this.updateOutputs(args[0]['_color'].toRGBA());
+
+          newComboObj.runComparisons(true);
         }).on('save', (...args) => {
           this.updateOutputs(args[0].toRGBA());
 
@@ -145,10 +147,12 @@ var hiThere = require("./modules/helloThere");
     // Am array of picker holders
 
     let pickerHolders = [];
+    let pickerHolderEls = document.querySelectorAll('.pickerHolder');
 
-    document.querySelectorAll('.pickerHolder').forEach(function (el) {
-      pickerHolders.push(Object.create(pickerContainer).init(el));
-    });
+    for (let i = 0; i < pickerHolderEls.length; i++) {
+      let newPicker = Object.create(pickerContainer).init(pickerHolderEls[i])
+      pickerHolders.push(newPicker);
+    }
 
 
     // Get all our possible picker combos, for accessibility comparison purposes
@@ -218,7 +222,7 @@ var hiThere = require("./modules/helloThere");
 
           if (verbose) {
             this.comparisons.forEach(function(el) {
-              console.log(el.x, ' : ', el.y, ' --> ', el.contrast);
+              console.log(el.x, ' : ', el.y, ' --> ', el.ratio);
             })
           };
         };
