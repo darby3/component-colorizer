@@ -285,7 +285,7 @@ var hiThere = require("./modules/helloThere");
       resultMessage: function(ratio) {
         const failMessage = "This fails WCAG 2.0. Never do this.";
         const largeMessage = "This passes WCAG 2.0 for large text. Use with caution.";
-        const safeMessage = "This totally passes WCAG 2.0. Go nuts!";
+        const safeMessage = "This passes WCAG 2.0. Go nuts!";
 
         if (ratio < 3) {
           return {
