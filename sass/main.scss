@@ -125,11 +125,41 @@ pickerHolder__luminance {
   justify-content: flex-start;
 
   button {
+    display: inline-block;
     font-size: 1.25rem;
     font-weight: bold;
     margin: 0 var(--body-pad) var(--body-pad) 0;
     padding: 1rem;
     border-radius: 4px;
+  }
+}
+
+.lum_switch {
+  font-size: 1.25rem;
+  margin: 0 var(--body-pad) var(--body-pad) 0;
+  padding: 1rem;
+  font-weight: bold;
+
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: normal;
+
+  border: 1px dotted #efefef;
+  border-radius: 4px;
+
+  label {
+    padding-right: 1rem;
+  }
+
+  input {
+    height: 30px;
+    width: 30px;
+    margin: 0;
+
+    &:focus {
+      outline: 3px solid #efefef;
+    }
   }
 }
 
