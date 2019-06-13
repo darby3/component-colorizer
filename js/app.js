@@ -2,7 +2,7 @@
 var Pickr = require("../node_modules/@simonwep/pickr/dist/pickr.min");
 var get_luminance = require("./modules/getLuminance");
 var get_contrast = require("./modules/getContrast");
-var hiThere = require("./modules/helloThere");
+// var hiThere = require("./modules/helloThere");
 var starships = require("./modules/starships");
 
 (function () {
@@ -148,68 +148,78 @@ var starships = require("./modules/starships");
      * Picker Combinations/Comparisons
      */
 
-    // Get an array of all possible picker combinations.
-    const getPickerCombos = function(pickerHolders) {
-      let pickerCombinations = [];
-
-      for (let i = 0; i < pickerHolders.length - 1; i++) {
-        let x = pickerHolders[i];
-
-        for (let j = i + 1; j < pickerHolders.length; j++) {
-          let y = pickerHolders[j];
-          pickerCombinations.push([ x, y ]);
-        }
-      }
-
-      return pickerCombinations;
-    };
-
-    // Picker Container Combo Object
-
-    let comparison = {
-      init: function(x, y, xCol, yCol, ratio) {
-        this.x = x;
-        this.y = y;
-        this.xCol = xCol;
-        this.yCol = yCol;
-        this.ratio = ratio;
-
-        return this;
-      }
-    }
-
-    let pickerCombos = {
-      init: function() {
-        this.combos = getPickerCombos(pickerHolders);
+    // Comparison object.
+    // Takes two pickerContainer objects, and creates an object that includes their names
+    let comparisonObject = {
+      init: function(x, y) {
+        this.xName = x.el.dataset.name;
+        this.yName = y.el.dataset.name;
+        this.xCol = x.picker.getColor().toRGBA();
+        this.yCol = y.picker.getColor().toRGBA();
+        this.ratio = get_contrast(this.xCol, this.yCol);
+        this.result = this.resultMessage();
 
         return this;
       },
 
-      comparisons: [],
+      // Generate a result message based on the current ratio.
+      resultMessage: function() {
+        const failMessage = "This fails WCAG 2.0. Never do this.";
+        const largeMessage = "This passes WCAG 2.0 for large text. Use with caution.";
+        const safeMessage = "This passes WCAG 2.0. Go nuts!";
+
+        if (this.ratio < 3) {
+          return {
+            result: 'fail',
+            message: failMessage
+          }
+        } else if (this.ratio >= 3 && this.ratio < 4.5) {
+          return {
+            result: 'caution',
+            message: largeMessage
+          }
+        } else if (this.ratio >= 4.5) {
+          return {
+            result: 'success',
+            message: safeMessage
+          }
+        }
+      }
+    };
+
+    // Picker Combinations Object.
+    // Holds all our comparison objects and does things with them.
+    let pickerCombos = {
+      init: function() {
+        this.comparisons = [];
+        this.getPickerCombos(pickerHolders);
+        this.runComparisons();
+
+        return this;
+      },
 
       // Run comparisons
       runComparisons: function() {
-        this.comparisons = [];
-
-        for (let i = 0; i < this.combos.length; i++) {
-          let x = this.combos[i][0].picker.getColor().toRGBA();
-          let y = this.combos[i][1].picker.getColor().toRGBA();
-          let xName = this.combos[i][0].el.dataset.name;
-          let yName = this.combos[i][1].el.dataset.name;
-          let ratio = get_contrast(x, y);
-
-          this.comparisons.push(Object.create(comparison).init(
-            xName,
-            yName,
-            x,
-            y,
-            ratio
-          ));
-        };
-
+        this.getPickerCombos(pickerHolders);
         this.updateOutputs();
 
         return this;
+      },
+
+      // Get an array of all possible picker combinations.
+      getPickerCombos: function(pickerHolders) {
+        let pickerCombinations = [];
+
+        for (let i = 0; i < pickerHolders.length - 1; i++) {
+          let x = pickerHolders[i];
+
+          for (let j = i + 1; j < pickerHolders.length; j++) {
+            let y = pickerHolders[j];
+            pickerCombinations.push(Object.create(comparisonObject).init(x, y));
+          }
+        }
+
+        this.comparisons = pickerCombinations;
       },
 
       // Update output box
@@ -220,87 +230,69 @@ var starships = require("./modules/starships");
           outputBox.removeChild(outputBox.lastChild);
         }
 
-        let template = document.querySelector('#result_box');
-
         for (let q = 0; q < this.comparisons.length; q++) {
-          let resultBox = document.importNode(template.content, true);
-
-          resultBox.querySelector('.result__title__primary').innerHTML = this.comparisons[q].x;
-          resultBox.querySelector('.result__title__secondary').innerHTML = this.comparisons[q].y;
-          resultBox.querySelector('.result__ratio__value').innerHTML = this.comparisons[q].ratio;
-
-          let resultObj = this.resultMessage(this.comparisons[q].ratio);
-
-          // Sample box
-
-          let firstColor = this.comparisons[q].xCol;
-          let secondColor = this.comparisons[q].yCol;
-
-          let sampleBox = resultBox.querySelector('.sample');
-
-          sampleBox.style.color = firstColor;
-          sampleBox.style.backgroundColor = secondColor;
-
-
-          let resultMessageEl = resultBox.querySelector('.result__message');
-          resultMessageEl.innerHTML = resultObj.message;
-          resultMessageEl.dataset.resultlevel = resultObj.result;
-
-          // Inverter button
-
-          let inverter = resultBox.querySelector('[data-inverter]');
-          inverter.addEventListener('click', function() {
-            let sampleBox = this.closest('.results_box').querySelector('.sample');
-
-            let colorOne = sampleBox.style.color;
-            let colorTwo = sampleBox.style.backgroundColor;
-
-            sampleBox.style.color = colorTwo;
-            sampleBox.style.backgroundColor = colorOne;
-          });
-
+          let resultBox = this.buildResult(this.comparisons[q]);
           outputBox.appendChild(resultBox);
 
           let newOutput = outputBox.lastElementChild;
-          newOutput.dataset.status = resultObj.result;
+          newOutput.dataset.status = this.comparisons[q].result.result;
         }
       },
 
-      // Generate a result message based on the current ratio.
-      resultMessage: function(ratio) {
-        const failMessage = "This fails WCAG 2.0. Never do this.";
-        const largeMessage = "This passes WCAG 2.0 for large text. Use with caution.";
-        const safeMessage = "This passes WCAG 2.0. Go nuts!";
+      // Build a single result box
+      buildResult: function(compObj) {
+        let template = document.querySelector('#result_box');
+        let resultBox = document.importNode(template.content, true);
 
-        if (ratio < 3) {
-          return {
-            result: 'fail',
-            message: failMessage
-          }
-        } else if (ratio >= 3 && ratio < 4.5) {
-          return {
-            result: 'caution',
-            message: largeMessage
-          }
-        } else if (ratio >= 4.5) {
-          return {
-            result: 'success',
-            message: safeMessage
-          }
-        }
+        resultBox.querySelector('.result__title__primary').innerHTML = compObj.xName;
+        resultBox.querySelector('.result__title__secondary').innerHTML = compObj.yName;
+        resultBox.querySelector('.result__ratio__value').innerHTML = compObj.ratio;
 
-      }
+        // Sample box
+
+        let firstColor = compObj.xCol;
+        let secondColor = compObj.yCol;
+
+        let sampleBox = resultBox.querySelector('.sample');
+
+        sampleBox.style.color = firstColor;
+        sampleBox.style.backgroundColor = secondColor;
+
+        // Result message
+
+        let resultMessageEl = resultBox.querySelector('.result__message');
+        resultMessageEl.innerHTML = compObj.result.message;
+        resultMessageEl.dataset.resultlevel = compObj.result.result;
+
+        // Inverter button
+
+        let inverter = resultBox.querySelector('[data-inverter]');
+        inverter.addEventListener('click', function() {
+          let sampleBox = this.closest('.results_box').querySelector('.sample');
+
+          let colorOne = sampleBox.style.color;
+          let colorTwo = sampleBox.style.backgroundColor;
+
+          sampleBox.style.color = colorTwo;
+          sampleBox.style.backgroundColor = colorOne;
+        });
+
+        return resultBox;
+      },
     };
 
-    let newComboObj = Object.create(pickerCombos).init().runComparisons(true);
+    let newComboObj = Object.create(pickerCombos).init();
 
-    // Controllers
+    /**
+     * Controllers
+     */
+
     const inverter = document.getElementById('invertWrapper');
-    inverter.onclick = function (e) {
+    inverter.addEventListener('click', function () {
       const wrapper = document.getElementById('wrapperBackground');
       wrapper.classList.toggle('black');
       wrapper.classList.toggle('white');
-    };
+    });
 
     const lumSwitch = document.querySelector('#lumSwitch');
     lumSwitch.addEventListener('change', function() {
@@ -317,10 +309,8 @@ var starships = require("./modules/starships");
       }
     });
 
-
     const addNew = document.querySelector("#addPicker");
     addNew.addEventListener("click", function() {
-
       let template = document.querySelector('#picker_starter');
       let holder = document.querySelector('.pickers');
       let newPicker = document.importNode(template.content, true);
@@ -340,9 +330,11 @@ var starships = require("./modules/starships");
       newComboObj = Object.create(pickerCombos).init().runComparisons(true);
     });
 
-    // Output Toggles
-    let outputToggles = document.querySelectorAll('[data-targets="outputs"] [data-target]');
+    /**
+     * Output Toggles
+     */
 
+    let outputToggles = document.querySelectorAll('[data-targets="outputs"] [data-target]');
     outputToggles.forEach(function(el) {
       el.addEventListener('click', function() {
         let target = el.dataset.target;
