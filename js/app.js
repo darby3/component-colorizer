@@ -320,6 +320,17 @@ var hiThere = require("./modules/helloThere");
       wrapper.classList.toggle('white');
     };
 
+    const lumToggle = document.querySelector('#toggleLuminance');
+    let lumCur = true;
+    lumToggle.addEventListener('click', function() {
+      const lumVals = document.querySelectorAll('.pickerHolder__luminance');
+      lumCur = !lumCur;
+      console.log(lumCur);
+      lumVals.forEach(function(el) {
+        el.classList.toggle('hidden');
+      })
+    });
+
     const addNew = document.querySelector("#addPicker");
     addNew.addEventListener("click", function() {
       console.log("clicked add new");
@@ -330,6 +341,11 @@ var hiThere = require("./modules/helloThere");
 
       holder.appendChild(newPicker);
       let newPickerEl = holder.lastElementChild;
+
+      if (!lumCur) {
+        newPickerEl.querySelector('.pickerHolder__luminance').classList.toggle('hidden');
+      }
+
       newPickerEl.dataset.name = starships.fly();
       pickerHolders.push(Object.create(pickerContainer).init(newPickerEl));
 

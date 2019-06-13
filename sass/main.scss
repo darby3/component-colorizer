@@ -83,6 +83,10 @@ body {
 
 }
 
+pickerHolder__luminance {
+  transition: all 0.5s ease;
+}
+
 .pickerHolder__name {
   align-self: center;
   width: auto;
@@ -108,24 +112,24 @@ body {
 // Controllers Panel
 
 .controllers-wrapper {
-  padding: var(--body-pad) 0;
+  padding: var(--body-pad) var(--body-pad) 0;
   background: rgba(131, 132, 145, 1.0);
 }
 
 .controllers {
-  margin: auto;
-  width: calc(100% - 2rem);
-  max-width: 660px;
+  width: 100%;
+  //max-width: 660px;
   display: flex;
   flex-flow: row wrap;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
 
   button {
     font-size: 1.25rem;
     font-weight: bold;
+    margin: 0 var(--body-pad) var(--body-pad) 0;
     padding: 1rem;
-    border-radius: 8px;
+    border-radius: 4px;
   }
 }
 
