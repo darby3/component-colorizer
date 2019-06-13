@@ -248,7 +248,10 @@ var hiThere = require("./modules/helloThere");
           resultBox.querySelector('.result__title__secondary').innerHTML = this.comparisons[q].y;
           resultBox.querySelector('.result__ratio__value').innerHTML = this.comparisons[q].ratio;
 
-          let resultOutput = this.resultMessage(this.comparisons[q].ratio);
+          let resultObj = this.resultMessage(this.comparisons[q].ratio);
+          console.log(resultObj);
+          let resultOutput = resultObj.message;
+          console.log(resultOutput);
 
           // Sample box
 
@@ -263,8 +266,8 @@ var hiThere = require("./modules/helloThere");
           console.log("current color: ", sampleBox.style.color);
 
           let resultMessageEl = resultBox.querySelector('.result__message');
-          resultMessageEl.innerHTML = resultOutput.message;
-          resultMessageEl.dataset.resultlevel = resultOutput.result;
+          resultMessageEl.innerHTML = resultObj.message;
+          resultMessageEl.dataset.resultlevel = resultObj.result;
 
           // Inverter button
 
@@ -281,6 +284,10 @@ var hiThere = require("./modules/helloThere");
           });
 
           outputBox.appendChild(resultBox);
+
+          let newOutput = outputBox.lastElementChild;
+          console.log(newOutput);
+          newOutput.dataset.status = resultObj.result;
         }
       },
 
@@ -350,7 +357,23 @@ var hiThere = require("./modules/helloThere");
       pickerHolders.push(Object.create(pickerContainer).init(newPickerEl));
 
       newComboObj = Object.create(pickerCombos).init().runComparisons(true);
+    });
 
+    // Output Toggles
+    let outputToggles = document.querySelectorAll('[data-targets="outputs"] [data-target]');
+    console.log(outputToggles);
+
+    outputToggles.forEach(function(el) {
+      el.addEventListener('click', function() {
+        let target = el.dataset.target;
+        let outputs = document.querySelectorAll('.results_box[data-status=' + target + ']');
+
+        if (outputs.length > 0) {
+          outputs.forEach(function(el) {
+            el.classList.toggle('hidden');
+          })
+        };
+      });
     });
 
   });
