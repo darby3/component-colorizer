@@ -59,13 +59,12 @@ var hiThere = require("./modules/helloThere");
         this.rgba_output = el.querySelector('.rgba');
         this.luminance_output = el.querySelector('.luminance');
 
-        this.labelHolder = el.querySelector('[data-labeller]');
+        this.labelHolder = el.querySelector('[data-labeler]');
         this.labelHolder.tabIndex = 0;
 
-        console.log(this.labelHolder);
 
-        if (this.labelHolder.dataset.labeller == "") {
-          this.labelHolder.dataset.labeller = this.labelHolder.innerHTML = el.dataset.name;
+        if (this.labelHolder.dataset.labeler == "") {
+          this.labelHolder.dataset.labeler = this.labelHolder.innerHTML = el.dataset.name;
         }
 
         // Create a color picker
@@ -85,48 +84,47 @@ var hiThere = require("./modules/helloThere");
         });
 
         this.labelHolder.addEventListener('click', function(e) {
-          self.addLabeller();
+          self.addLabeler();
         });
 
         this.labelHolder.addEventListener('keyup', function(e) {
           if (e.keyCode === 13) {
-            self.addLabeller();
+            self.addLabeler();
           }
         });
 
         return this;
       },
 
-      // Activating the labeller field
-      addLabeller: function() {
+      // Activating the labeler field
+      addLabeler: function() {
         let self = this;
         let catcher = document.createElement('input');
 
-        catcher.value = this.labelHolder.dataset.labeller || this.labelHolder.innerHTML;
+        catcher.value = this.labelHolder.dataset.labeler || this.labelHolder.innerHTML;
 
-        console.log(this.labelHolder);
         this.el.insertBefore(catcher, this.labelHolder);
         catcher.focus();
         this.labelHolder.classList.toggle('hidden');
 
         catcher.addEventListener('blur', function() {
-          self.removeLabeller();
+          self.removeLabeler();
         });
 
         catcher.addEventListener('keyup', function(e) {
           if (e.keyCode === 9 || e.keyCode === 13 || e.keyCode === 27) {
-            self.removeLabeller();
+            self.removeLabeler();
           }
         });
 
         this.catcher = catcher;
       },
 
-      // Deactivating the labeller field
-      removeLabeller: function() {
+      // Deactivating the labeler field
+      removeLabeler: function() {
         let newValue = this.catcher.value;
 
-        this.labelHolder.dataset.labeller = this.labelHolder.innerHTML = this.el.dataset.name = newValue;
+        this.labelHolder.dataset.labeler = this.labelHolder.innerHTML = this.el.dataset.name = newValue;
 
         this.el.removeChild(this.catcher);
         delete this.catcher;
@@ -190,7 +188,6 @@ var hiThere = require("./modules/helloThere");
 
     let pickerCombos = {
       init: function() {
-        console.log("initializing pickerCombos object");
         this.combos = getPickerCombos();
 
         return this;
@@ -199,9 +196,7 @@ var hiThere = require("./modules/helloThere");
       comparisons: [],
 
       // Run comparisons
-      runComparisons: function(verbose) {
-        console.log('comparisons:');
-
+      runComparisons: function() {
         this.comparisons = [];
 
         for (let i = 0; i < this.combos.length; i++) {
@@ -218,12 +213,6 @@ var hiThere = require("./modules/helloThere");
             y,
             ratio
           ));
-
-          if (verbose) {
-            this.comparisons.forEach(function(el) {
-              console.log(el.x, ' : ', el.y, ' --> ', el.ratio);
-            })
-          };
         };
 
         this.updateOutputs();
@@ -249,9 +238,6 @@ var hiThere = require("./modules/helloThere");
           resultBox.querySelector('.result__ratio__value').innerHTML = this.comparisons[q].ratio;
 
           let resultObj = this.resultMessage(this.comparisons[q].ratio);
-          console.log(resultObj);
-          let resultOutput = resultObj.message;
-          console.log(resultOutput);
 
           // Sample box
 
@@ -263,7 +249,6 @@ var hiThere = require("./modules/helloThere");
           sampleBox.style.color = firstColor;
           sampleBox.style.backgroundColor = secondColor;
 
-          console.log("current color: ", sampleBox.style.color);
 
           let resultMessageEl = resultBox.querySelector('.result__message');
           resultMessageEl.innerHTML = resultObj.message;
@@ -273,7 +258,6 @@ var hiThere = require("./modules/helloThere");
 
           let inverter = resultBox.querySelector('[data-inverter]');
           inverter.addEventListener('click', function() {
-            console.log(this);
             let sampleBox = this.closest('.results_box').querySelector('.sample');
 
             let colorOne = sampleBox.style.color;
@@ -286,7 +270,6 @@ var hiThere = require("./modules/helloThere");
           outputBox.appendChild(resultBox);
 
           let newOutput = outputBox.lastElementChild;
-          console.log(newOutput);
           newOutput.dataset.status = resultObj.result;
         }
       },
@@ -332,7 +315,6 @@ var hiThere = require("./modules/helloThere");
     lumToggle.addEventListener('click', function() {
       const lumVals = document.querySelectorAll('.pickerHolder__luminance');
       lumCur = !lumCur;
-      console.log(lumCur);
       lumVals.forEach(function(el) {
         el.classList.toggle('hidden');
       })
@@ -340,7 +322,6 @@ var hiThere = require("./modules/helloThere");
 
     const addNew = document.querySelector("#addPicker");
     addNew.addEventListener("click", function() {
-      console.log("clicked add new");
 
       let template = document.querySelector('#picker_starter');
       let holder = document.querySelector('.pickers');
@@ -361,7 +342,6 @@ var hiThere = require("./modules/helloThere");
 
     // Output Toggles
     let outputToggles = document.querySelectorAll('[data-targets="outputs"] [data-target]');
-    console.log(outputToggles);
 
     outputToggles.forEach(function(el) {
       el.addEventListener('click', function() {

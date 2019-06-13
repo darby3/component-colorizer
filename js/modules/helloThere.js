@@ -18,7 +18,7 @@ var helloWorld = function() {
     }
   }
 
-  console.log(outputItems);
+  // console.log(outputItems);
 };
 
 module.exports = helloWorld;
