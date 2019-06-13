@@ -3,27 +3,11 @@ var Pickr = require("../node_modules/@simonwep/pickr/dist/pickr.min");
 var get_luminance = require("./modules/getLuminance");
 var get_contrast = require("./modules/getContrast");
 var hiThere = require("./modules/helloThere");
+var starships = require("./modules/starships");
 
 (function () {
   document.addEventListener('DOMContentLoaded', function () {
-    hiThere();
-
-    // Starship Names
-
-    let starships = {
-      names: [
-        'Enterprise',
-        'Voyager',
-        'Discovery',
-        'Reliant',
-        'Vengeance',
-        'Defiant',
-      ],
-
-      fly: function() {
-        return this.names[Math.floor(Math.random() * Math.floor(this.names.length))]
-      }
-    };
+    // hiThere();
 
     // Color Pickers
 
@@ -46,54 +30,64 @@ var hiThere = require("./modules/helloThere");
       }
     };
 
-
-    // Object-oriented color picker containers
+    /**
+     * Picker Container
+     */
 
     var pickerContainer = {
       init: function (el) {
         let self = this;
 
-        this.el = el;
-        this.id = el.id;
+        self.el = el;
+        self.id = el.id;
+        self.rgba_output = el.querySelector('.rgba');
+        self.luminance_output = el.querySelector('.luminance');
+        self.labelHolder = el.querySelector('[data-labeler]');
+        self.labelHolder.tabIndex = 0;
 
-        this.rgba_output = el.querySelector('.rgba');
-        this.luminance_output = el.querySelector('.luminance');
-
-        this.labelHolder = el.querySelector('[data-labeler]');
-        this.labelHolder.tabIndex = 0;
-
-
-        if (this.labelHolder.dataset.labeler == "") {
-          this.labelHolder.dataset.labeler = this.labelHolder.innerHTML = el.dataset.name;
+        if (self.labelHolder.dataset.labeler == "") {
+          self.labelHolder.dataset.labeler = self.labelHolder.innerHTML = el.dataset.name;
         }
 
         // Create a color picker
-        let pickerEl = el.querySelector('.color-picker');
+        self.createPicker();
 
-        this.picker = Pickr.create({
+        // Listeners
+        self.addListeners();
+
+        return self;
+      },
+
+      // Create a color picker
+      createPicker: function() {
+        let self = this;
+        let pickerEl = this.el.querySelector('.color-picker');
+
+        self.picker = Pickr.create({
           el: pickerEl,
           components: componentsOptions
         }).on('init', (...args) => {
-          this.updateOutputs(args[0]['_color'].toRGBA());
-
-          newComboObj.runComparisons(true);
+          self.updateOutputs(args[0]['_color'].toRGBA());
+          newComboObj.runComparisons();
         }).on('save', (...args) => {
-          this.updateOutputs(args[0].toRGBA());
+          self.updateOutputs(args[0].toRGBA());
+          newComboObj.runComparisons();
+        })
+      },
 
-          newComboObj.runComparisons(true);
-        });
+      // Event listeners
+      addListeners: function() {
+        let self = this;
 
-        this.labelHolder.addEventListener('click', function(e) {
+        self.labelHolder.addEventListener('click', function() {
           self.addLabeler();
         });
 
-        this.labelHolder.addEventListener('keyup', function(e) {
+        self.labelHolder.addEventListener('keyup', function(e) {
           if (e.keyCode === 13) {
             self.addLabeler();
           }
         });
-
-        return this;
       },
 
       // Activating the labeler field
@@ -101,11 +95,11 @@ var hiThere = require("./modules/helloThere");
         let self = this;
         let catcher = document.createElement('input');
 
-        catcher.value = this.labelHolder.dataset.labeler || this.labelHolder.innerHTML;
-
-        this.el.insertBefore(catcher, this.labelHolder);
+        catcher.value = self.labelHolder.dataset.labeler || self.labelHolder.innerHTML;
+        self.el.insertBefore(catcher, self.labelHolder);
         catcher.focus();
-        this.labelHolder.classList.toggle('hidden');
+
+        self.labelHolder.classList.toggle('hidden');
 
         catcher.addEventListener('blur', function() {
           self.removeLabeler();
@@ -117,7 +111,7 @@ var hiThere = require("./modules/helloThere");
           }
         });
 
-        this.catcher = catcher;
+        self.catcher = catcher;
       },
 
       // Deactivating the labeler field
@@ -125,11 +119,12 @@ var hiThere = require("./modules/helloThere");
         let newValue = this.catcher.value;
 
         this.labelHolder.dataset.labeler = this.labelHolder.innerHTML = this.el.dataset.name = newValue;
+        this.labelHolder.classList.toggle('hidden');
 
         this.el.removeChild(this.catcher);
         delete this.catcher;
 
-        this.labelHolder.classList.toggle('hidden');
+        newComboObj.runComparisons();
       },
 
       // Updating the container output values
@@ -139,9 +134,7 @@ var hiThere = require("./modules/helloThere");
       },
     };
 
-
-
-    // Am array of picker holders
+    // All picker containers
 
     let pickerHolders = [];
     let pickerHolderEls = document.querySelectorAll('.pickerHolder');
@@ -151,25 +144,24 @@ var hiThere = require("./modules/helloThere");
       pickerHolders.push(newPicker);
     }
 
+    /**
+     * Picker Combinations/Comparisons
+     */
 
-    // Get all our possible picker combos, for accessibility comparison purposes
+    // Get an array of all possible picker combinations.
+    const getPickerCombos = function(pickerHolders) {
+      let pickerCombinations = [];
 
-    const getPickerCombos = function() {
-      let pickers = pickerHolders;
-      let outputItems = [];
+      for (let i = 0; i < pickerHolders.length - 1; i++) {
+        let x = pickerHolders[i];
 
-      for (let i = 0; i < pickers.length - 1; i++) {
-        let x = pickers[i];
-
-        for (let j = i + 1; j < pickers.length; j++) {
-          let y = pickers[j];
-          let output = [ x, y ];
-
-          outputItems.push(output);
+        for (let j = i + 1; j < pickerHolders.length; j++) {
+          let y = pickerHolders[j];
+          pickerCombinations.push([ x, y ]);
         }
       }
 
-      return outputItems;
+      return pickerCombinations;
     };
 
     // Picker Container Combo Object
@@ -188,7 +180,7 @@ var hiThere = require("./modules/helloThere");
 
     let pickerCombos = {
       init: function() {
-        this.combos = getPickerCombos();
+        this.combos = getPickerCombos(pickerHolders);
 
         return this;
       },
