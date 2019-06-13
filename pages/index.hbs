@@ -18,7 +18,7 @@ title: Component Colorizer
                 <span>Color</span>
                 <span class="rgba"></span>
             </div>
-            <div class="pickerHolder__stat pickerHolder__luminance">
+            <div class="pickerHolder__stat pickerHolder__luminance hidden">
                 <span>Luminance</span>
                 <span class="luminance"></span>
             </div>
@@ -32,7 +32,7 @@ title: Component Colorizer
                 <span>Color:</span>
                 <span class="rgba"></span>
             </div>
-            <div class="pickerHolder__stat pickerHolder__luminance">
+            <div class="pickerHolder__stat pickerHolder__luminance hidden">
                 <span>Luminance</span>
                 <span class="luminance"></span>
             </div>
@@ -46,7 +46,7 @@ title: Component Colorizer
                 <span>Color:</span>
                 <span class="rgba"></span>
             </div>
-            <div class="pickerHolder__stat pickerHolder__luminance">
+            <div class="pickerHolder__stat pickerHolder__luminance hidden">
                 <span>Luminance</span>
                 <span class="luminance"></span>
             </div>
@@ -58,7 +58,10 @@ title: Component Colorizer
     <div class="controllers">
         <button id="invertWrapper">Invert Background Color</button>
         <button id="addPicker">Add New Picker</button>
-        <button id="toggleLuminance">Toggle Luminance Values</button>
+        <div class="lum_switch">
+            <label for="lumSwitch">Luminance Values</label>
+            <input type="checkbox" name="lumSwitch" id="lumSwitch">
+        </div>
     </div>
 </div>
 
@@ -120,7 +123,7 @@ title: Component Colorizer
                 <span>Color:</span>
                 <span class="rgba"></span>
             </div>
-            <div class="pickerHolder__stat pickerHolder__luminance">
+            <div class="pickerHolder__stat pickerHolder__luminance hidden">
                 <span>Luminance</span>
                 <span class="luminance"></span>
             </div>

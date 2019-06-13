@@ -310,15 +310,21 @@ var hiThere = require("./modules/helloThere");
       wrapper.classList.toggle('white');
     };
 
-    const lumToggle = document.querySelector('#toggleLuminance');
-    let lumCur = true;
-    lumToggle.addEventListener('click', function() {
+    const lumSwitch = document.querySelector('#lumSwitch');
+    lumSwitch.addEventListener('change', function() {
+      console.log("changed");
       const lumVals = document.querySelectorAll('.pickerHolder__luminance');
-      lumCur = !lumCur;
-      lumVals.forEach(function(el) {
-        el.classList.toggle('hidden');
-      })
+      if (this.checked) {
+        lumVals.forEach(function(el) {
+          el.classList.remove('hidden');
+        });
+      } else {
+        lumVals.forEach(function(el) {
+          el.classList.add('hidden');
+        });
+      }
     });
+
 
     const addNew = document.querySelector("#addPicker");
     addNew.addEventListener("click", function() {
@@ -330,8 +336,10 @@ var hiThere = require("./modules/helloThere");
       holder.appendChild(newPicker);
       let newPickerEl = holder.lastElementChild;
 
-      if (!lumCur) {
-        newPickerEl.querySelector('.pickerHolder__luminance').classList.toggle('hidden');
+      if (document.querySelector('#lumSwitch').checked) {
+        newPickerEl.querySelector('.pickerHolder__luminance').classList.remove('hidden');
+      } else {
+        newPickerEl.querySelector('.pickerHolder__luminance').classList.add('hidden');
       }
 
       newPickerEl.dataset.name = starships.fly();
